@@ -1,16 +1,33 @@
-# This is a sample Python script.
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from ortools.linear_solver import pywraplp
+
+def main():
+    solver = pywraplp.Solver.CreateSolver("GLOP")
+    if not solver:
+        return
+
+    x1 = solver.NumVar(0, solver.Infinity(), 'x1')
+    x2 = solver.NumVar(0, solver.Infinity(), 'x2')
+    x3 = solver.NumVar(0, solver.Infinity(), 'x3')
+    x4 = solver.NumVar(0, solver.Infinity(), 'x4')
+
+    solver.Add(x1 - x2 - x3 - 2 * x4 >= 2)
+    solver.Add(x1 + x2 + x4 <= 8)
+    solver.Add(x1 + 2 * x2 - x3 == 4)
+
+    solver.Maximize(x1 + x2 - 2 * x3 + 2 * x4)
+
+    status = solver.Solve()
+
+    if status == pywraplp.Solver.OPTIMAL:
+        print("Optimal solution:")
+        print("Objective value:", round(solver.Objective().Value(),3))
+        print("x1:", round(x1.solution_value(),3))
+        print("x2:", round(x2.solution_value(),3))
+        print("x3:", round(x3.solution_value(),3))
+        print("x4:", round(x4.solution_value(),3))
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+8 to toggle the breakpoint.
+if __name__ == "__main__":
+    main()
 
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/

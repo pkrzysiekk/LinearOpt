@@ -1,5 +1,6 @@
 
 from ortools.linear_solver import pywraplp
+import time
 
 def main():
     solver = pywraplp.Solver.CreateSolver("GLOP")
@@ -16,8 +17,9 @@ def main():
     solver.Add(x1 + 2 * x2 - x3 == 4)
 
     solver.Maximize(x1 + x2 - 2 * x3 + 2 * x4)
-
+    start = time.perf_counter_ns()
     status = solver.Solve()
+    end = time.perf_counter_ns()
 
     if status == pywraplp.Solver.OPTIMAL:
         print("Optimal solution:")
@@ -26,6 +28,7 @@ def main():
         print("x2:", round(x2.solution_value(),3))
         print("x3:", round(x3.solution_value(),3))
         print("x4:", round(x4.solution_value(),3))
+        print("Time taken:", (end - start) * 10**-6, "milliseconds")
 
 
 if __name__ == "__main__":
